@@ -16,8 +16,12 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2026022100;
+$plugin->version = 2026022101;
 $plugin->requires = 2024100100;
 $plugin->component = 'mod_exaaifeedback';
 $plugin->release = '1.0';
 $plugin->maturity = MATURITY_ALPHA;
+$plugin->dependencies = [
+    'block_exaaichat' => 2026022000,
+    'local_table_sql' => 2026011200,
+];
