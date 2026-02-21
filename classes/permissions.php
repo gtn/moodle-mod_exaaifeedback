@@ -14,10 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace mod_exaaifeedback;
+
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2026022100;
-$plugin->requires = 2024100100;
-$plugin->component = 'mod_exaaifeedback';
-$plugin->release = '1.0';
-$plugin->maturity = MATURITY_ALPHA;
+class permissions {
+    static function can_view(\context_module $context): bool {
+        return has_capability('mod/exaaifeedback:view', $context);
+    }
+
+    static function require_view(\context_module $context): void {
+        require_capability('mod/exaaifeedback:view', $context);
+    }
+
+    static function can_manage(\context_module $context): bool {
+        return has_capability('mod/exaaifeedback:manage', $context);
+    }
+
+    static function require_manage(\context_module $context): void {
+        require_capability('mod/exaaifeedback:manage', $context);
+    }
+}

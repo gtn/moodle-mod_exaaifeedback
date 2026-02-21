@@ -14,10 +14,4 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
-
-$plugin->version = 2026022100;
-$plugin->requires = 2024100100;
-$plugin->component = 'mod_exaaifeedback';
-$plugin->release = '1.0';
-$plugin->maturity = MATURITY_ALPHA;
+require_once(__DIR__ . '/../../config.php');

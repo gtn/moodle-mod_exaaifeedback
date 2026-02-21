@@ -1,0 +1,9 @@
+.path-mod-exaaifeedback .label-row > td > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Hide activity description on manage pages */
+#page-mod-exaaifeedback-feedbacks .activity-description,
+#page-mod-exaaifeedback-moodle_feedback_details .activity-description {
+    display: none;
+}

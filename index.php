@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
+require_once('../../config.php');
 
-$plugin->version = 2026022100;
-$plugin->requires = 2024100100;
-$plugin->component = 'mod_exaaifeedback';
-$plugin->release = '1.0';
-$plugin->maturity = MATURITY_ALPHA;
+$id = required_param('id', PARAM_INT);
+
+$PAGE->set_url('/mod/exaaifeedback/index.php', ['id' => $id]);
+
+redirect("$CFG->wwwroot/course/view.php?id=$id");

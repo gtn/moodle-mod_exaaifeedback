@@ -16,8 +16,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2026022100;
-$plugin->requires = 2024100100;
-$plugin->component = 'mod_exaaifeedback';
-$plugin->release = '1.0';
-$plugin->maturity = MATURITY_ALPHA;
+function xmldb_exaaifeedback_upgrade(int $oldversion): bool {
+    global $DB;
+
+    return true;
+}
