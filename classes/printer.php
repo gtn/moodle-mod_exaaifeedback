@@ -42,8 +42,7 @@ class printer {
 
         $html = static::get_html($title, $description, $answers, $response_html, $username);
 
-        // Use dompdf from leseguetesiegel vendor.
-        require_once $CFG->dirroot . '/local/leseguetesiegel/vendor/autoload.php';
+        helper::composer_autoload();
 
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);

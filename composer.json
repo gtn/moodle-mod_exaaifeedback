@@ -1,0 +1,6 @@
+{
+    "name": "gtn/mod_exaaifeedback",
+    "require": {
+        "dompdf/dompdf": "^3.1.0"
+    }
+}
