@@ -55,15 +55,16 @@ if (!$completed) {
     exit;
 }
 
-// Get AI feedback data if available.
+// Get feedback data if available and released.
+$final_response_html = '';
+$answers = [];
 $result = feedback::get_result($instance->id, $completed->id);
-if ($result->timefeedbacksent ?? false) {
-    $result_data = json_decode($result->data ?? '');
-    $ai_response = $result_data->ai_response ?? '';
-    $answers = $result_data->answers ?? [];
+if (($result->timefeedbacksent ?? 0) > 0) {
+    $final_response_html = $result->data->final_response_html;
+    $answers = $result->data->answers ?? [];
 }
 
-if (!$ai_response) {
+if (!$final_response_html) {
     echo $OUTPUT->header();
     echo $OUTPUT->notification(get_string('feedback_not_yet_available', 'exaaifeedback'), 'info');
     echo $OUTPUT->footer();
@@ -75,7 +76,7 @@ if ($action === 'pdf') {
     printer::generate_pdf(
         $instance->name,
         $answers,
-        $ai_response,
+        $final_response_html,
         fullname($USER),
     );
     exit;
@@ -94,7 +95,7 @@ $render_buttons = function() use ($cm, $instance) {
     <div style="margin: 15px 0;">
         <a href="<?= $pdf_url ?>" class="btn btn-primary" target="_blank">
             <i class="fa fa-file-pdf-o"></i>
-            <?= get_string('print_feedback', 'exaaifeedback', $instance->name) ?>
+            <?= get_string('print_feedback', 'exaaifeedback') ?>
         </a>
     </div>
     <?php
@@ -102,7 +103,7 @@ $render_buttons = function() use ($cm, $instance) {
 
 $render_buttons();
 
-\mod_exaaifeedback\output::feedback_details($answers, $ai_response);
+\mod_exaaifeedback\output::feedback_details($answers, $final_response_html);
 
 $render_buttons();
 

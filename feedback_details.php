@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 use mod_exaaifeedback\feedback;
+use mod_exaaifeedback\output;
 use mod_exaaifeedback\printer;
 
 require_once(__DIR__ . '/inc.php');
@@ -48,16 +49,12 @@ if ($completed->anonymous_response != 1 && $completed->userid) {
     $username = get_string('anonymous', 'feedback');
 }
 
-// Generate AI feedback.
+// Generate on first access, or get cached result with needs_regeneration flag.
 $error = '';
 try {
-    $result = feedback::generate_ai_feedback($instance, $course->id, $completedid, $completed);
-    $answers = $result->answers;
-    $ai_response = $result->ai_response;
+    $result_data = feedback::generate_ai_feedback($instance, $course->id, $completedid, $completed);
 } catch (\Exception $e) {
     $error = $e->getMessage();
-    $answers = [];
-    $ai_response = '';
 }
 
 if ($error) {
@@ -65,6 +62,29 @@ if ($error) {
     echo $OUTPUT->notification($error, 'error');
     echo $OUTPUT->footer();
     exit;
+}
+
+$result_record = feedback::get_result($instance->id, $completedid);
+$answers = $result_data->answers;
+
+// Regenerate AI feedback.
+if ($action === 'regenerate') {
+    require_sesskey();
+
+    try {
+        feedback::regenerate_ai_feedback($instance, $course->id, $completedid, $completed);
+    } catch (\Exception $e) {
+        redirect(
+            new moodle_url('/mod/exaaifeedback/feedback_details.php', ['id' => $cm->id, 'completedid' => $completedid]),
+            $e->getMessage(),
+            null,
+            \core\output\notification::NOTIFY_ERROR,
+        );
+    }
+
+    redirect(
+        new moodle_url('/mod/exaaifeedback/feedback_details.php', ['id' => $cm->id, 'completedid' => $completedid]),
+    );
 }
 
 // Submit feedback to user.
@@ -95,8 +115,9 @@ if ($action === 'withdraw') {
 if ($action === 'pdf') {
     printer::generate_pdf(
         $instance->name,
+        $instance->intro,
         $answers,
-        $ai_response,
+        $result_record->data->final_response_html,
         $username,
     );
     exit;
@@ -104,13 +125,19 @@ if ($action === 'pdf') {
 
 echo $OUTPUT->header();
 
-$result_record = feedback::get_result($instance->id, $completedid);
-
-$render_buttons = function() use ($cm, $completedid, $result_record, $instance) {
+$render_buttons = function() use ($cm, $completedid, $result_record, $result_data, $instance, $OUTPUT) {
+    // Show notice if prompt or answers changed since last generation (only if not yet submitted).
+    if (!$result_record->timefeedbacksent && $result_data->needs_regeneration) {
+        echo $OUTPUT->notification(get_string('feedback_can_be_regenerated', 'exaaifeedback'), 'info');
+    }
     $pdf_url = new moodle_url('/mod/exaaifeedback/feedback_details.php', [
         'id' => $cm->id,
         'completedid' => $completedid,
         'action' => 'pdf',
+    ]);
+    $edit_url = new moodle_url('/mod/exaaifeedback/feedback_edit.php', [
+        'id' => $cm->id,
+        'completedid' => $completedid,
     ]);
     $submit_url = new moodle_url('/mod/exaaifeedback/feedback_details.php', [
         'id' => $cm->id,
@@ -129,7 +156,7 @@ $render_buttons = function() use ($cm, $completedid, $result_record, $instance) 
     <div style="display: flex; gap: 8px; margin: 15px 0">
         <a href="<?= $pdf_url ?>" class="btn btn-secondary" target="_blank">
             <i class="fa fa-file-pdf-o"></i>
-            <?= get_string('print_feedback', 'exaaifeedback', $instance->name) ?>
+            <?= get_string('print_feedback', 'exaaifeedback') ?>
         </a>
         <?php if ($result_record->timefeedbacksent ?? false): ?>
             <a href="<?= $withdraw_url ?>" class="btn btn-warning">
@@ -137,6 +164,22 @@ $render_buttons = function() use ($cm, $completedid, $result_record, $instance) 
                 <?= get_string('withdraw_feedback', 'exaaifeedback') ?>
             </a>
         <?php else: ?>
+            <a href="<?= $edit_url ?>" class="btn btn-secondary">
+                <i class="fa fa-edit"></i>
+                <?= get_string('edit_feedback', 'exaaifeedback') ?>
+            </a>
+            <?php
+            $regenerate_url = new moodle_url('/mod/exaaifeedback/feedback_details.php', [
+                'id' => $cm->id,
+                'completedid' => $completedid,
+                'action' => 'regenerate',
+                'sesskey' => sesskey(),
+            ]);
+            ?>
+            <a href="<?= $regenerate_url ?>" class="btn btn-secondary" onclick="return confirm('<?= get_string('regenerate_feedback_confirm', 'exaaifeedback') ?>');">
+                <i class="fa fa-refresh"></i>
+                <?= get_string('regenerate_feedback', 'exaaifeedback') ?>
+            </a>
             <a href="<?= $submit_url ?>" class="btn btn-primary">
                 <i class="fa fa-paper-plane"></i>
                 <?= get_string('submit_to_user', 'exaaifeedback') ?>
@@ -148,7 +191,7 @@ $render_buttons = function() use ($cm, $completedid, $result_record, $instance) 
 
 $render_buttons();
 
-\mod_exaaifeedback\output::feedback_details($answers, $ai_response);
+output::feedback_details($answers, $result_record->data->final_response_html);
 
 $render_buttons();
 

@@ -16,12 +16,13 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2026022300;
-$plugin->requires = 2024100100;
-$plugin->component = 'mod_exaaifeedback';
-$plugin->release = '1.0';
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->dependencies = [
-    'block_exaaichat' => 2026022000,
-    'local_table_sql' => 2026011200,
-];
+if ($hassiteconfig) {
+    $settings->add(new admin_setting_configstoredfile(
+        'mod_exaaifeedback/logo',
+        get_string('logo', 'exaaifeedback'),
+        get_string('logo:desc', 'exaaifeedback'),
+        'logo',
+        0,
+        ['accepted_types' => ['.png', '.jpg', '.jpeg', '.svg']],
+    ));
+}

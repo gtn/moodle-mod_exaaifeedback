@@ -22,10 +22,25 @@ use Dompdf\Options;
 defined('MOODLE_INTERNAL') || die;
 
 class printer {
-    static function generate_pdf(string $title, array $answers, string $ai_response, string $username): void {
+    static function get_logo_data_uri(): string {
+        $fs = get_file_storage();
+        $context = \context_system::instance();
+        $files = $fs->get_area_files($context->id, 'mod_exaaifeedback', 'logo', 0, 'sortorder', false);
+        $file = reset($files);
+        if (!$file) {
+            return '';
+        }
+
+        $mimetype = $file->get_mimetype();
+        $content = $file->get_content();
+
+        return 'data:' . $mimetype . ';base64,' . base64_encode($content);
+    }
+
+    static function generate_pdf(string $title, string $description, array $answers, string $response_html, string $username): void {
         global $CFG;
 
-        $html = static::get_html($title, $answers, $ai_response, $username);
+        $html = static::get_html($title, $description, $answers, $response_html, $username);
 
         // Use dompdf from leseguetesiegel vendor.
         require_once $CFG->dirroot . '/local/leseguetesiegel/vendor/autoload.php';
@@ -55,7 +70,7 @@ class printer {
         $dompdf->stream("AI-Feedback.pdf", ["Attachment" => false]);
     }
 
-    static function get_html(string $title, array $answers, string $ai_response, string $username): string {
+    static function get_html(string $title, string $description, array $answers, string $response_html, string $username): string {
         ob_start();
         ?>
         <!DOCTYPE html>
@@ -126,36 +141,27 @@ class printer {
         </head>
         <body>
 
+        <?php $logo = static::get_logo_data_uri(); ?>
+        <?php if ($logo): ?>
+            <div style="padding-left: 20px; float: right;">
+                <img src="<?= $logo ?>" style="max-width: 200px; max-height: 200px;">
+            </div>
+        <?php endif; ?>
+
         <h1><?= htmlspecialchars($title) ?></h1>
         <?php if ($username): ?>
             <div class="subtitle"><?= htmlspecialchars($username) ?></div>
         <?php endif; ?>
+        <?php if ($description): ?>
+            <div style="margin-bottom: 15px;"><?= format_text($description, FORMAT_HTML) ?></div>
+        <?php endif; ?>
 
         <h2><?= get_string('feedback_answers', 'exaaifeedback') ?></h2>
-        <table>
-            <?php foreach ($answers as $answer): ?>
-                <?php if (($answer->type ?? '') === 'label'): ?>
-                    <tr>
-                        <td colspan="2"><strong><?= strip_tags($answer->text) ?></strong></td>
-                    </tr>
-                <?php elseif (($answer->type ?? '') === 'pagebreak'): ?>
-                    <tr>
-                        <td colspan="2">
-                            <hr>
-                        </td>
-                    </tr>
-                <?php else: ?>
-                    <tr>
-                        <th><?= htmlspecialchars($answer->question) ?></th>
-                        <td><?= htmlspecialchars($answer->answer) ?></td>
-                    </tr>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </table>
+        <?= output::feedback_answers($answers, true) ?>
 
-        <h2><?= get_string('ai_feedback', 'exaaifeedback') ?></h2>
+        <h2 style="page-break-before: always;"><?= get_string('ai_feedback', 'exaaifeedback') ?></h2>
         <div class="ai-response">
-            <?= format_text($ai_response, FORMAT_MARKDOWN) ?>
+            <?= $response_html ?>
         </div>
 
         </body>

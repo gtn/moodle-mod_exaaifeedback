@@ -2,8 +2,11 @@
     margin-bottom: 0;
 }
 
-/* Hide activity description on manage pages */
-#page-mod-exaaifeedback-feedbacks .activity-description,
-#page-mod-exaaifeedback-moodle_feedback_details .activity-description {
+/* Hide activity description by default, show only on view and feedback_details */
+.path-mod-exaaifeedback .activity-description {
     display: none;
+}
+#page-mod-exaaifeedback-view .activity-description,
+#page-mod-exaaifeedback-feedback_details .activity-description {
+    display: block;
 }

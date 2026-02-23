@@ -28,33 +28,61 @@ class output {
         echo $OUTPUT->tabtree($tabs, $selected);
     }
 
-    static function feedback_details(array $answers, string $ai_response): void {
+    static function feedback_details(array $answers, string $response_html): void {
         global $OUTPUT;
 
         // Show the original feedback answers.
         echo $OUTPUT->heading(get_string('feedback_answers', 'exaaifeedback'), 2);
-        ?>
-        <table class="generaltable" style="table-layout: fixed;">
-        <colgroup><col style="width: 50%"><col style="width: 50%"></colgroup>
-        <?php foreach ($answers as $answer): ?>
-            <?php if (($answer->type ?? '') === 'label'): ?>
-                <tr class="label-row">
-                    <td colspan="2"><?= format_text($answer->text, FORMAT_HTML) ?></td>
-                </tr>
-            <?php elseif (($answer->type ?? '') === 'pagebreak'): ?>
-                <!-- don't show -->
-            <?php else: ?>
+        echo static::feedback_answers($answers);
+
+        // Show the response (already HTML).
+        echo $OUTPUT->heading(get_string('ai_feedback', 'exaaifeedback'), 2);
+        echo $OUTPUT->box($response_html, 'ai-feedback-response');
+    }
+
+    static function feedback_answers(array $answers, bool $for_pdf = false): string {
+        ob_start();
+
+        $in_table = false;
+        $table_start = '<table class="generaltable" style="table-layout: fixed;">
+            <colgroup><col style="width: 50%"><col style="width: 50%"></colgroup>';
+
+        foreach ($answers as $answer) {
+            if (($answer->type ?? '') === 'label') {
+                if ($in_table) {
+                    echo '</table>';
+                    $in_table = false;
+                }
+
+                if ($for_pdf) {
+                    ?>
+                    <div style="margin-left: 10px; font-weight: bold;">
+                        <?= format_text($answer->text, FORMAT_HTML) ?>
+                    </div>
+                    <?php
+                } else {
+                    ?>
+                    <h3 style="margin-left: 12px"><?= format_text($answer->text, FORMAT_HTML) ?></h3>
+                    <?php
+                }
+            } else {
+                if (!$in_table) {
+                    echo $table_start;
+                    $in_table = true;
+                }
+                ?>
                 <tr>
                     <th><?= s($answer->question) ?></th>
                     <td><?= s($answer->answer) ?></td>
                 </tr>
-            <?php endif; ?>
-        <?php endforeach; ?>
-        </table>
+                <?php
+            }
+        }
 
-        <?php
-        // Show the AI response.
-        echo $OUTPUT->heading(get_string('ai_feedback', 'exaaifeedback'), 2);
-        echo $OUTPUT->box(format_text($ai_response, FORMAT_MARKDOWN), 'ai-feedback-response');
+        if ($in_table) {
+            echo '</table>';
+        }
+
+        return ob_get_clean();
     }
 }

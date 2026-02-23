@@ -21,7 +21,7 @@ use block_exaaichat\completion\completion_base;
 defined('MOODLE_INTERNAL') || die;
 
 class feedback {
-    const AI_LOGIC_VERSION = 2026022100;
+    const AI_LOGIC_VERSION = 2026022102;
 
     /**
      * Get all items (questions and labels) for a feedback.
@@ -110,13 +110,11 @@ class feedback {
         // Check if a stored result already exists and is still valid.
         $check = md5(print_r([static::AI_LOGIC_VERSION, $prompt, $answers], true));
         $existing = static::get_result($instance->id, $completedid);
-        $existing_data = json_decode($existing->data ?? '');
 
-        // Don't regenerate if already submitted to user.
-        if ($existing->timefeedbacksent ?? false) {
-            $ret = $existing_data;
-        } elseif (($existing_data->check ?? '') === $check) {
-            $ret = $existing_data;
+        // Only generate if no result exists or check hash was invalidated (by regenerate).
+        if ($existing && ($existing->data->check ?? '')) {
+            $ret = $existing->data;
+            $ret->needs_regeneration = $existing->data->check !== $check;
         } else {
             $system_message = $prompt;
             // Tell the AI about the {fullname} placeholder — it will be replaced after the AI ai_response.
@@ -180,9 +178,31 @@ class feedback {
                     'timemodified' => time(),
                 ]);
             }
+
+            $ret->needs_regeneration = false;
         }
 
         return $ret;
+    }
+
+    static function regenerate_ai_feedback(object $instance, int $courseid, int $completedid, object $completed): object {
+        // Invalidate check hash so generate_ai_feedback will re-run the AI.
+        $result = static::get_result($instance->id, $completedid);
+        if ($result) {
+            $result->data->check = '';
+            $result->data->teacher_response_html = '';
+            static::save_result_data($result);
+        }
+
+        return static::generate_ai_feedback($instance, $courseid, $completedid, $completed);
+    }
+
+    static function save_result_data(object $result): void {
+        global $DB;
+
+        $result->data = json_encode($result->data);
+        $result->timemodified = time();
+        $DB->update_record('exaaifeedback_result', $result);
     }
 
     static function mark_as_submitted(int $exaaifeedbackid, int $completedid): void {
@@ -206,9 +226,34 @@ class feedback {
     static function get_result(int $exaaifeedbackid, int $completedid): ?object {
         global $DB;
 
-        return $DB->get_record('exaaifeedback_result', [
+        $result = $DB->get_record('exaaifeedback_result', [
             'exaaifeedbackid' => $exaaifeedbackid,
             'completedid' => $completedid,
         ]) ?: null;
+
+        if ($result) {
+            $result->data = json_decode($result->data ?? '');
+            // Always provide final response as HTML.
+            if ($result->data->teacher_response_html ?? '') {
+                $result->data->final_response_html = $result->data->teacher_response_html;
+            } else {
+                $result->data->final_response_html = format_text($result->data->ai_response ?? '', FORMAT_MARKDOWN);
+            }
+        }
+
+        return $result;
     }
+
+    static function update_teacher_response_html(int $exaaifeedbackid, int $completedid, string $teacher_response_html): void {
+        global $DB;
+
+        $result = static::get_result($exaaifeedbackid, $completedid);
+        if (!$result) {
+            return;
+        }
+
+        $result->data->teacher_response_html = $teacher_response_html;
+        static::save_result_data($result);
+    }
+
 }
