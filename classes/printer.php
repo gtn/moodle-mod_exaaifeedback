@@ -136,24 +136,33 @@ class printer {
                     font-size: 11px;
                     margin-bottom: 20px;
                 }
+                .subtitle {
+                    color: #777;
+                    font-size: 11px;
+                    margin-bottom: 20px;
+                }
             </style>
         </head>
         <body>
 
-        <?php $logo = static::get_logo_data_uri(); ?>
-        <?php if ($logo): ?>
-            <div style="padding-left: 20px; float: right;">
-                <img src="<?= $logo ?>" style="max-width: 200px; max-height: 200px;">
-            </div>
-        <?php endif; ?>
-
-        <h1><?= htmlspecialchars($title) ?></h1>
-        <?php if ($username): ?>
-            <div class="subtitle"><?= htmlspecialchars($username) ?></div>
-        <?php endif; ?>
-        <?php if ($description): ?>
-            <div style="margin-bottom: 15px;"><?= format_text($description, FORMAT_HTML) ?></div>
-        <?php endif; ?>
+        <div class="header">
+            <?php $logo = static::get_logo_data_uri(); ?>
+            <?php if ($logo): ?>
+                <div style="padding-left: 20px; max-width: 150px; max-height: 150px; float: right;">
+                    <img src="<?= $logo ?>" style=" height: auto; display: block !important; max-width: 100% !important;">
+                </div>
+                
+            <?php endif; ?>
+    
+            <h1><?= htmlspecialchars($title) ?></h1>
+            <?php if ($username): ?>
+                <div class="subtitle"><?= htmlspecialchars($username) ?></div>
+            <?php endif; ?>
+            <?php if ($description): ?>
+                <div style="margin-bottom: 15px;"><?= format_text($description, FORMAT_HTML) ?></div>
+            <?php endif; ?>
+            <div style="clear: both;"></div>
+        </div>
 
         <h2><?= get_string('feedback_answers', 'exaaifeedback') ?></h2>
         <?= output::feedback_answers($answers, true) ?>
