@@ -25,4 +25,11 @@ if ($hassiteconfig) {
         0,
         ['accepted_types' => ['.png', '.jpg', '.jpeg', '.svg']],
     ));
+
+    $settings->add(new admin_setting_configcheckbox(
+        'mod_exaaifeedback/pdf_include_answers',
+        get_string('pdf_include_answers', 'exaaifeedback'),
+        get_string('pdf_include_answers:desc', 'exaaifeedback'),
+        1,
+    ));
 }

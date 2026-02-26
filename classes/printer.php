@@ -136,38 +136,38 @@ class printer {
                     font-size: 11px;
                     margin-bottom: 20px;
                 }
-                .subtitle {
-                    color: #777;
-                    font-size: 11px;
-                    margin-bottom: 20px;
-                }
             </style>
         </head>
         <body>
 
-        <div class="header">
-            <?php $logo = static::get_logo_data_uri(); ?>
-            <?php if ($logo): ?>
-                <div style="padding-left: 20px; max-width: 150px; max-height: 150px; float: right;">
-                    <img src="<?= $logo ?>" style=" height: auto; display: block !important; max-width: 100% !important;">
-                </div>
-                
-            <?php endif; ?>
-    
-            <h1><?= htmlspecialchars($title) ?></h1>
-            <?php if ($username): ?>
-                <div class="subtitle"><?= htmlspecialchars($username) ?></div>
-            <?php endif; ?>
-            <?php if ($description): ?>
-                <div style="margin-bottom: 15px;"><?= format_text($description, FORMAT_HTML) ?></div>
-            <?php endif; ?>
-            <div style="clear: both;"></div>
-        </div>
+        <?php $logo = static::get_logo_data_uri(); ?>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+            <tr>
+                <td style="vertical-align: bottom; border: none; padding: 0;">
+                    <h1 style="margin: 0 0 5px 0;"><?= htmlspecialchars($title) ?></h1>
+                    <?php if ($username): ?>
+                        <div class="subtitle"><?= htmlspecialchars($username) ?></div>
+                    <?php endif; ?>
+                    <?php if ($description): ?>
+                        <div style="margin-top: 10px;"><?= format_text($description, FORMAT_HTML) ?></div>
+                    <?php endif; ?>
+                </td>
+                <?php if ($logo): ?>
+                    <td style="width: 4cm; vertical-align: top; text-align: right; border: none; padding: 0; padding-left: 5mm;">
+                        <img src="<?= $logo ?>" style="max-width: 4cm; max-height: 6cm;">
+                    </td>
+                <?php endif; ?>
+            </tr>
+        </table>
 
-        <h2><?= get_string('feedback_answers', 'exaaifeedback') ?></h2>
-        <?= output::feedback_answers($answers, true) ?>
+        <?php if (get_config('mod_exaaifeedback', 'pdf_include_answers')): ?>
+            <h2><?= get_string('feedback_answers', 'exaaifeedback') ?></h2>
+            <?= output::feedback_answers($answers, true) ?>
 
-        <h2 style="page-break-before: always;"><?= get_string('ai_feedback', 'exaaifeedback') ?></h2>
+            <h2 style="page-break-before: always;"><?= get_string('ai_feedback', 'exaaifeedback') ?></h2>
+        <?php else: ?>
+            <h2><?= get_string('ai_feedback', 'exaaifeedback') ?></h2>
+        <?php endif; ?>
         <div class="ai-response">
             <?= $response_html ?>
         </div>
