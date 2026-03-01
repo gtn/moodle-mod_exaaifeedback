@@ -64,7 +64,7 @@ if ($error) {
     exit;
 }
 
-$result_record = feedback::get_result($instance->id, $completedid);
+$result = feedback::get_result($instance->id, $completedid);
 $answers = $result_data->answers;
 
 // Regenerate AI feedback.
@@ -113,11 +113,13 @@ if ($action === 'withdraw') {
 
 // PDF download.
 if ($action === 'pdf') {
+    $final_response_html = $result->data->final_response_html;
+
     printer::generate_pdf(
         $instance->name,
         $instance->intro,
         $answers,
-        $result_record->data->final_response_html,
+        $final_response_html,
         $username,
     );
     exit;
@@ -125,9 +127,9 @@ if ($action === 'pdf') {
 
 echo $OUTPUT->header();
 
-$render_buttons = function() use ($cm, $completedid, $result_record, $result_data, $instance, $OUTPUT) {
+$render_buttons = function() use ($cm, $completedid, $result, $result_data, $instance, $OUTPUT) {
     // Show notice if prompt or answers changed since last generation (only if not yet submitted).
-    if (!$result_record->timefeedbacksent && $result_data->needs_regeneration) {
+    if (!$result->timefeedbacksent && $result_data->needs_regeneration) {
         echo $OUTPUT->notification(get_string('feedback_can_be_regenerated', 'exaaifeedback'), 'info');
     }
     $pdf_url = new moodle_url('/mod/exaaifeedback/feedback_details.php', [
@@ -158,7 +160,7 @@ $render_buttons = function() use ($cm, $completedid, $result_record, $result_dat
             <i class="fa fa-file-pdf-o"></i>
             <?= get_string('print_feedback', 'exaaifeedback') ?>
         </a>
-        <?php if ($result_record->timefeedbacksent ?? false): ?>
+        <?php if ($result->timefeedbacksent ?? false): ?>
             <a href="<?= $withdraw_url ?>" class="btn btn-warning">
                 <i class="fa fa-undo"></i>
                 <?= get_string('withdraw_feedback', 'exaaifeedback') ?>
@@ -191,7 +193,7 @@ $render_buttons = function() use ($cm, $completedid, $result_record, $result_dat
 
 $render_buttons();
 
-output::feedback_details($answers, $result_record->data->final_response_html);
+output::feedback_details($answers, $result->data->final_response_html);
 
 $render_buttons();
 
