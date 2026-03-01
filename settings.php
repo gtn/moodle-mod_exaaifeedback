@@ -27,9 +27,9 @@ if ($hassiteconfig) {
     ));
 
     $settings->add(new admin_setting_configcheckbox(
-        'mod_exaaifeedback/pdf_include_answers',
-        get_string('pdf_include_answers', 'exaaifeedback'),
-        get_string('pdf_include_answers:desc', 'exaaifeedback'),
+        'mod_exaaifeedback/show_answers',
+        get_string('show_answers', 'exaaifeedback'),
+        get_string('show_answers:desc', 'exaaifeedback'),
         1,
     ));
 }

@@ -75,6 +75,7 @@ if (!$final_response_html) {
 if ($action === 'pdf') {
     printer::generate_pdf(
         $instance->name,
+        $instance->intro,
         $answers,
         $final_response_html,
         fullname($USER),

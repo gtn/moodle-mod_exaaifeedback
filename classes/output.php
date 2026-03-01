@@ -31,11 +31,11 @@ class output {
     static function feedback_details(array $answers, string $response_html): void {
         global $OUTPUT;
 
-        // Show the original feedback answers.
-        echo $OUTPUT->heading(get_string('feedback_answers', 'exaaifeedback'), 2);
-        echo static::feedback_answers($answers);
+        if (get_config('mod_exaaifeedback', 'show_answers')) {
+            echo $OUTPUT->heading(get_string('feedback_answers', 'exaaifeedback'), 2);
+            echo static::feedback_answers($answers);
+        }
 
-        // Show the response (already HTML).
         echo $OUTPUT->heading(get_string('ai_feedback', 'exaaifeedback'), 2);
         echo $OUTPUT->box($response_html, 'ai-feedback-response');
     }

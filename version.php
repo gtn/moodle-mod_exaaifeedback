@@ -16,7 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2026022600;
+$plugin->version = 2026030100;
 $plugin->requires = 2024100100;
 $plugin->component = 'mod_exaaifeedback';
 $plugin->release = '5.1';

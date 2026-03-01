@@ -160,7 +160,7 @@ class printer {
             </tr>
         </table>
 
-        <?php if (get_config('mod_exaaifeedback', 'pdf_include_answers')): ?>
+        <?php if (get_config('mod_exaaifeedback', 'show_answers')): ?>
             <h2><?= get_string('feedback_answers', 'exaaifeedback') ?></h2>
             <?= output::feedback_answers($answers, true) ?>
 
