@@ -9,4 +9,22 @@
 #page-mod-exaaifeedback-view .activity-description,
 #page-mod-exaaifeedback-feedback_details .activity-description {
     display: block;
+    text-align: justify;
 }
+
+.path-mod-exaaifeedback .ai-response {
+    padding: 1rem 0;
+    text-align: justify;
+}
+.path-mod-exaaifeedback .ai-response h1 {
+    font-size: 160%;
+}
+
+.path-mod-exaaifeedback .ai-response h2 {
+    font-size: 140%;
+}
+
+.path-mod-exaaifeedback .ai-response h3 {
+    font-size: 120%;
+}
+

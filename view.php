@@ -104,7 +104,7 @@ $render_buttons = function() use ($cm, $instance) {
 
 $render_buttons();
 
-\mod_exaaifeedback\output::feedback_details($answers, $final_response_html);
+\mod_exaaifeedback\output::feedback_details($answers, $final_response_html, $instance->name);
 
 $render_buttons();
 

@@ -46,6 +46,7 @@ class printer {
 
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
 
         if (!file_exists($CFG->tempdir . '/mod_exaaifeedback/dompdf_font_cache')) {
             mkdir($CFG->tempdir . '/mod_exaaifeedback/dompdf_font_cache', 0777, true);
@@ -63,10 +64,12 @@ class printer {
             $font = $fontMetrics->get_font('Helvetica', 'normal');
             $canvas->text(40, 800, $title . ' - ' . $username, $font, 10);
             $pageText = $pageNumber . ' / ' . $pageCount;
-            $canvas->text(510, 800, $pageText, $font, 10);
+            $textWidth = $fontMetrics->get_text_width($pageText, $font, 10);
+            $canvas->text(555 - $textWidth, 800, $pageText, $font, 10);
         });
 
-        $dompdf->stream("AI-Feedback.pdf", ["Attachment" => false]);
+        $filename = clean_filename($title . ' - ' . $username) . '.pdf';
+        $dompdf->stream($filename, ["Attachment" => false]);
     }
 
     static function get_html(string $title, string $description, array $answers, string $response_html, string $username): string {
@@ -76,23 +79,34 @@ class printer {
         <html>
         <head>
             <meta charset="UTF-8">
+            <?php $pdf_font = get_config('mod_exaaifeedback', 'pdf_font'); ?>
+            <?php if ($pdf_font): ?>
+                <link href="https://fonts.googleapis.com/css2?family=<?= str_replace(' ', '+', $pdf_font) ?>:wght@400;700&display=swap" rel="stylesheet">
+            <?php endif; ?>
             <style>
                 @page {
                     margin: 14mm;
                 }
 
                 body {
-                    font-family: Arial, sans-serif;
+                    font-family: <?= $pdf_font ? "'" . htmlspecialchars($pdf_font) . "', " : '' ?>Arial, sans-serif;
                     font-size: 12px;
+                    line-height: <?= strtolower($pdf_font) === 'figtree' ? '1.3' : '1.5' ?>;
                 }
 
                 h1 {
                     font-size: 18px;
-                    color: #333;
-                    margin-bottom: 5px;
                 }
 
                 h2 {
+                    font-size: 16px;
+                }
+
+                h3 {
+                    font-size: 14px;
+                }
+
+                h2.with-line {
                     font-size: 14px;
                     color: #555;
                     margin-top: 20px;
@@ -124,11 +138,7 @@ class printer {
                 }
 
                 .ai-response {
-                    background-color: #f9f9f9;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    padding: 12px;
-                    line-height: 1.5;
+                    text-align: justify;
                 }
 
                 .subtitle {
@@ -141,15 +151,12 @@ class printer {
         <body>
 
         <?php $logo = static::get_logo_data_uri(); ?>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+        <table style="width: 100%; border-collapse: collapse;">
             <tr>
                 <td style="vertical-align: bottom; border: none; padding: 0;">
                     <h1 style="margin: 0 0 5px 0;"><?= htmlspecialchars($title) ?></h1>
                     <?php if ($username): ?>
                         <div class="subtitle"><?= htmlspecialchars($username) ?></div>
-                    <?php endif; ?>
-                    <?php if ($description): ?>
-                        <div style="margin-top: 10px;"><?= format_text($description, FORMAT_HTML) ?></div>
                     <?php endif; ?>
                 </td>
                 <?php if ($logo): ?>
@@ -160,17 +167,23 @@ class printer {
             </tr>
         </table>
 
+        <?php if ($description): ?>
+            <div style="margin-top: 0; text-align: justify;"><?= format_text($description, FORMAT_HTML) ?></div>
+        <?php endif; ?>
+
         <?php if (get_config('mod_exaaifeedback', 'show_answers')): ?>
-            <h2><?= get_string('feedback_answers', 'exaaifeedback') ?></h2>
+            <h2 class="with-line"><?= get_string('feedback_answers', 'exaaifeedback') ?></h2>
             <?= output::feedback_answers($answers, true) ?>
 
-            <h2 style="page-break-before: always;"><?= get_string('ai_feedback', 'exaaifeedback') ?></h2>
+            <h2 class="with-line" style="page-break-before: always;"><?= htmlspecialchars($title) ?></h2>
+            <div class="ai-response">
+                <?= $response_html ?>
+            </div>
         <?php else: ?>
-            <h2><?= get_string('ai_feedback', 'exaaifeedback') ?></h2>
+            <div class="ai-response">
+                <?= $response_html ?>
+            </div>
         <?php endif; ?>
-        <div class="ai-response">
-            <?= $response_html ?>
-        </div>
 
         </body>
         </html>

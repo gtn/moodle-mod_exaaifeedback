@@ -28,16 +28,16 @@ class output {
         echo $OUTPUT->tabtree($tabs, $selected);
     }
 
-    static function feedback_details(array $answers, string $response_html): void {
+    static function feedback_details(array $answers, string $response_html, string $activity_name): void {
         global $OUTPUT;
 
         if (get_config('mod_exaaifeedback', 'show_answers')) {
             echo $OUTPUT->heading(get_string('feedback_answers', 'exaaifeedback'), 2);
             echo static::feedback_answers($answers);
+            echo $OUTPUT->heading($activity_name, 2);
         }
 
-        echo $OUTPUT->heading(get_string('ai_feedback', 'exaaifeedback'), 2);
-        echo $OUTPUT->box($response_html, 'ai-feedback-response');
+        echo '<div class="ai-response">' . $response_html . '</div>';
     }
 
     static function feedback_answers(array $answers, bool $for_pdf = false): string {

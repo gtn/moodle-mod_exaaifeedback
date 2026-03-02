@@ -193,7 +193,7 @@ $render_buttons = function() use ($cm, $completedid, $result, $result_data, $ins
 
 $render_buttons();
 
-output::feedback_details($answers, $result->data->final_response_html);
+output::feedback_details($answers, $result->data->final_response_html, $instance->name);
 
 $render_buttons();
 

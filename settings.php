@@ -32,4 +32,11 @@ if ($hassiteconfig) {
         get_string('show_answers:desc', 'exaaifeedback'),
         1,
     ));
+
+    $settings->add(new admin_setting_configtext(
+        'mod_exaaifeedback/pdf_font',
+        get_string('pdf_font', 'exaaifeedback'),
+        get_string('pdf_font:desc', 'exaaifeedback'),
+        '',
+    ));
 }
