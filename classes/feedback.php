@@ -229,11 +229,11 @@ class feedback {
                 $message->name = 'feedback_released';
                 $message->userfrom = \core_user::get_noreply_user();
                 $message->userto = $user;
-                $message->subject = get_string('notification_subject', 'exaaifeedback', $instance->name);
-                $message->fullmessage = get_string('notification_body', 'exaaifeedback', $instance->name);
+                $message->subject = get_string('notification:feedback_released:subject', 'exaaifeedback', $instance->name);
+                $message->fullmessage = get_string('notification:feedback_released:body', 'exaaifeedback', $instance->name);
                 $message->fullmessageformat = FORMAT_PLAIN;
                 $message->fullmessagehtml = '';
-                $message->smallmessage = get_string('notification_subject', 'exaaifeedback', $instance->name);
+                $message->smallmessage = get_string('notification:feedback_released:subject', 'exaaifeedback', $instance->name);
                 $message->notification = 1;
                 $message->contexturl = $viewurl->out(false);
                 $message->contexturlname = $instance->name;
