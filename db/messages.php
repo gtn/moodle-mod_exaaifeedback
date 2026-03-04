@@ -16,12 +16,11 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2026030300;
-$plugin->requires = 2024100701; // moodle 4.5
-$plugin->component = 'mod_exaaifeedback';
-$plugin->release = '5.1';
-$plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = [
-    'block_exaaichat' => 2026022000,
-    'local_table_sql' => 2026011200,
+$messageproviders = [
+    'feedback_released' => [
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
+        ],
+    ],
 ];

@@ -127,6 +127,27 @@ if ($action === 'pdf') {
 
 echo $OUTPUT->header();
 
+ob_start();
+?>
+<table class="generaltable" style="margin: 0;">
+    <tr>
+        <th><?= get_string('user') ?></th>
+        <td><?= htmlspecialchars($username) ?></td>
+    </tr>
+    <tr>
+        <th><?= get_string('date') ?></th>
+        <td><?= userdate($completed->timemodified) ?></td>
+    </tr>
+    <?php if ($result->timefeedbacksent): ?>
+        <tr>
+            <th><?= get_string('submitted', 'exaaifeedback') ?></th>
+            <td><?= userdate($result->timefeedbacksent) ?></td>
+        </tr>
+    <?php endif; ?>
+</table>
+<?php
+echo $OUTPUT->box(ob_get_clean());
+
 $render_buttons = function() use ($cm, $completedid, $result, $result_data, $instance, $OUTPUT) {
     // Show notice if prompt or answers changed since last generation (only if not yet submitted).
     if (!$result->timefeedbacksent && $result_data->needs_regeneration) {
@@ -193,7 +214,7 @@ $render_buttons = function() use ($cm, $completedid, $result, $result_data, $ins
 
 $render_buttons();
 
-output::feedback_details($answers, $result->data->final_response_html, $instance->name);
+output::feedback_details($answers, $result->data->final_response_html, $instance, $cm->id);
 
 $render_buttons();
 

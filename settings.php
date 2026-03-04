@@ -33,6 +33,13 @@ if ($hassiteconfig) {
         1,
     ));
 
+    $settings->add(new admin_setting_configcheckbox(
+        'mod_exaaifeedback/notify_user_on_release',
+        get_string('notify_user_on_release', 'exaaifeedback'),
+        get_string('notify_user_on_release:desc', 'exaaifeedback'),
+        0,
+    ));
+
     $settings->add(new admin_setting_configtext(
         'mod_exaaifeedback/pdf_font',
         get_string('pdf_font', 'exaaifeedback'),

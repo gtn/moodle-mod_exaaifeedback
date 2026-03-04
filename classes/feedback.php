@@ -212,6 +212,35 @@ class feedback {
             'exaaifeedbackid' => $exaaifeedbackid,
             'completedid' => $completedid,
         ]);
+
+        if (get_config('mod_exaaifeedback', 'notify_user_on_release')) {
+            $completed = $DB->get_record('feedback_completed', ['id' => $completedid]);
+            $user = $completed && $completed->anonymous_response != 1 && $completed->userid
+                ? \core_user::get_user($completed->userid)
+                : null;
+
+            if ($user) {
+                $instance = $DB->get_record('exaaifeedback', ['id' => $exaaifeedbackid]);
+                $cm = get_coursemodule_from_instance('exaaifeedback', $exaaifeedbackid, 0, false, MUST_EXIST);
+                $viewurl = new \moodle_url('/mod/exaaifeedback/view.php', ['id' => $cm->id]);
+
+                $message = new \core\message\message();
+                $message->component = 'mod_exaaifeedback';
+                $message->name = 'feedback_released';
+                $message->userfrom = \core_user::get_noreply_user();
+                $message->userto = $user;
+                $message->subject = get_string('notification_subject', 'exaaifeedback', $instance->name);
+                $message->fullmessage = get_string('notification_body', 'exaaifeedback', $instance->name);
+                $message->fullmessageformat = FORMAT_PLAIN;
+                $message->fullmessagehtml = '';
+                $message->smallmessage = get_string('notification_subject', 'exaaifeedback', $instance->name);
+                $message->notification = 1;
+                $message->contexturl = $viewurl->out(false);
+                $message->contexturlname = $instance->name;
+
+                message_send($message);
+            }
+        }
     }
 
     static function withdraw(int $exaaifeedbackid, int $completedid): void {

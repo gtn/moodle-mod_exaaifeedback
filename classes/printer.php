@@ -142,8 +142,7 @@ class printer {
                 }
 
                 .subtitle {
-                    color: #777;
-                    font-size: 11px;
+                    color: #555;
                     margin-bottom: 20px;
                 }
             </style>

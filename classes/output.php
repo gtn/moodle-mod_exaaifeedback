@@ -28,13 +28,17 @@ class output {
         echo $OUTPUT->tabtree($tabs, $selected);
     }
 
-    static function feedback_details(array $answers, string $response_html, string $activity_name): void {
+    static function feedback_details(array $answers, string $response_html, object $instance, int $cmid): void {
         global $OUTPUT;
+
+        if ($instance->intro) {
+            echo '<div style="text-align: justify; margin-top: 2rem;">' . format_module_intro('exaaifeedback', $instance, $cmid, false) . '</div>';
+        }
 
         if (get_config('mod_exaaifeedback', 'show_answers')) {
             echo $OUTPUT->heading(get_string('feedback_answers', 'exaaifeedback'), 2);
             echo static::feedback_answers($answers);
-            echo $OUTPUT->heading($activity_name, 2);
+            echo $OUTPUT->heading($instance->name, 2);
         }
 
         echo '<div class="ai-response">' . $response_html . '</div>';

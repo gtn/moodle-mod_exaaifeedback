@@ -85,9 +85,6 @@ if ($action === 'pdf') {
 
 echo $OUTPUT->header();
 
-// not needed: boost union is printing the module intro in the header already, and if we do it here as well, it is printed twice.
-// echo format_module_intro('exaaifeedback', $instance, $cm->id);
-
 $render_buttons = function() use ($cm, $instance) {
     global $PAGE;
     $pdf_url = $PAGE->url->out(true, ['action' => 'pdf']);
@@ -104,7 +101,7 @@ $render_buttons = function() use ($cm, $instance) {
 
 $render_buttons();
 
-\mod_exaaifeedback\output::feedback_details($answers, $final_response_html, $instance->name);
+\mod_exaaifeedback\output::feedback_details($answers, $final_response_html, $instance, $cm->id);
 
 $render_buttons();
 
