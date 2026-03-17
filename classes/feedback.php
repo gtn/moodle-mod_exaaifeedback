@@ -39,23 +39,6 @@ class feedback {
      * Get all completed submissions with their values.
      * Returns an array of objects with: completedid, userid, timemodified, and a 'values' array (itemid => value).
      */
-    static function get_completed_feedbacks(int $feedbackid): array {
-        global $DB;
-
-        $completeds = $DB->get_records('feedback_completed', ['feedback' => $feedbackid], 'timemodified DESC');
-        $items = static::get_items($feedbackid);
-
-        foreach ($completeds as $completed) {
-            $values = $DB->get_records('feedback_value', ['completed' => $completed->id], '', 'item, value');
-            $completed->values = [];
-            foreach ($items as $item) {
-                $completed->values[$item->id] = $values[$item->id]->value ?? '';
-            }
-        }
-
-        return $completeds;
-    }
-
     /**
      * Generate AI feedback for a completed feedback submission.
      */
