@@ -131,17 +131,17 @@ ob_start();
 ?>
 <table class="generaltable" style="margin: 0;">
     <tr>
-        <th><?= get_string('user') ?></th>
-        <td><?= htmlspecialchars($username) ?></td>
+        <th><?php echo get_string('user') ?></th>
+        <td><?php echo htmlspecialchars($username) ?></td>
     </tr>
     <tr>
-        <th><?= get_string('date') ?></th>
-        <td><?= userdate($completed->timemodified) ?></td>
+        <th><?php echo get_string('date') ?></th>
+        <td><?php echo userdate($completed->timemodified) ?></td>
     </tr>
     <?php if ($result->timefeedbacksent): ?>
         <tr>
-            <th><?= get_string('submitted', 'exaaifeedback') ?></th>
-            <td><?= userdate($result->timefeedbacksent) ?></td>
+            <th><?php echo get_string('submitted', 'exaaifeedback') ?></th>
+            <td><?php echo userdate($result->timefeedbacksent) ?></td>
         </tr>
     <?php endif; ?>
 </table>
@@ -177,19 +177,19 @@ $render_buttons = function() use ($cm, $completedid, $result, $result_data, $ins
 
     ?>
     <div style="display: flex; gap: 8px; margin: 15px 0">
-        <a href="<?= $pdf_url ?>" class="btn btn-secondary" target="_blank">
+        <a href="<?php echo $pdf_url ?>" class="btn btn-secondary" target="_blank">
             <i class="fa fa-file-pdf-o"></i>
-            <?= get_string('print_feedback', 'exaaifeedback') ?>
+            <?php echo get_string('print_feedback', 'exaaifeedback') ?>
         </a>
         <?php if ($result->timefeedbacksent ?? false): ?>
-            <a href="<?= $withdraw_url ?>" class="btn btn-warning">
+            <a href="<?php echo $withdraw_url ?>" class="btn btn-warning">
                 <i class="fa fa-undo"></i>
-                <?= get_string('withdraw_feedback', 'exaaifeedback') ?>
+                <?php echo get_string('withdraw_feedback', 'exaaifeedback') ?>
             </a>
         <?php else: ?>
-            <a href="<?= $edit_url ?>" class="btn btn-secondary">
+            <a href="<?php echo $edit_url ?>" class="btn btn-secondary">
                 <i class="fa fa-edit"></i>
-                <?= get_string('edit_feedback', 'exaaifeedback') ?>
+                <?php echo get_string('edit_feedback', 'exaaifeedback') ?>
             </a>
             <?php
             $regenerate_url = new moodle_url('/mod/exaaifeedback/feedback_details.php', [
@@ -199,13 +199,13 @@ $render_buttons = function() use ($cm, $completedid, $result, $result_data, $ins
                 'sesskey' => sesskey(),
             ]);
             ?>
-            <a href="<?= $regenerate_url ?>" class="btn btn-secondary" onclick="return confirm('<?= get_string('regenerate_feedback_confirm', 'exaaifeedback') ?>');">
+            <a href="<?php echo $regenerate_url ?>" class="btn btn-secondary" onclick="return confirm('<?php echo get_string('regenerate_feedback_confirm', 'exaaifeedback') ?>');">
                 <i class="fa fa-refresh"></i>
-                <?= get_string('regenerate_feedback', 'exaaifeedback') ?>
+                <?php echo get_string('regenerate_feedback', 'exaaifeedback') ?>
             </a>
-            <a href="<?= $submit_url ?>" class="btn btn-primary">
+            <a href="<?php echo $submit_url ?>" class="btn btn-primary">
                 <i class="fa fa-paper-plane"></i>
-                <?= get_string('submit_to_user', 'exaaifeedback') ?>
+                <?php echo get_string('submit_to_user', 'exaaifeedback') ?>
             </a>
         <?php endif; ?>
     </div>

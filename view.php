@@ -91,9 +91,9 @@ $render_buttons = function() use ($cm, $instance) {
 
     ?>
     <div style="margin: 15px 0;">
-        <a href="<?= $pdf_url ?>" class="btn btn-primary" target="_blank">
+        <a href="<?php echo $pdf_url ?>" class="btn btn-primary" target="_blank">
             <i class="fa fa-file-pdf-o"></i>
-            <?= get_string('print_feedback', 'exaaifeedback') ?>
+            <?php echo get_string('print_feedback', 'exaaifeedback') ?>
         </a>
     </div>
     <?php

@@ -61,12 +61,12 @@ class output {
                 if ($for_pdf) {
                     ?>
                     <div style="margin-left: 10px; font-weight: bold;">
-                        <?= format_text($answer->text, FORMAT_HTML) ?>
+                        <?php echo format_text($answer->text, FORMAT_HTML) ?>
                     </div>
                     <?php
                 } else {
                     ?>
-                    <h3 style="margin-left: 12px"><?= format_text($answer->text, FORMAT_HTML) ?></h3>
+                    <h3 style="margin-left: 12px"><?php echo format_text($answer->text, FORMAT_HTML) ?></h3>
                     <?php
                 }
             } else {
@@ -76,8 +76,8 @@ class output {
                 }
                 ?>
                 <tr>
-                    <th><?= s($answer->question) ?></th>
-                    <td><?= s($answer->answer) ?></td>
+                    <th><?php echo s($answer->question) ?></th>
+                    <td><?php echo s($answer->answer) ?></td>
                 </tr>
                 <?php
             }
