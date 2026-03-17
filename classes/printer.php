@@ -48,11 +48,9 @@ class printer {
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isRemoteEnabled', true);
 
-        if (!file_exists($CFG->tempdir . '/mod_exaaifeedback/dompdf_font_cache')) {
-            mkdir($CFG->tempdir . '/mod_exaaifeedback/dompdf_font_cache', 0777, true);
-        }
-        $options->setFontDir($CFG->tempdir . '/mod_exaaifeedback/dompdf_font_cache');
-        $options->setFontCache($CFG->tempdir . '/mod_exaaifeedback/dompdf_font_cache');
+        $fontcachedir = make_cache_directory('mod_exaaifeedback/dompdf_font_cache');
+        $options->setFontDir($fontcachedir);
+        $options->setFontCache($fontcachedir);
 
         $dompdf = new Dompdf($options);
         $dompdf->setPaper('A4', 'portrait');
