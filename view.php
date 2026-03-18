@@ -83,6 +83,13 @@ if ($action === 'pdf') {
     exit;
 }
 
+$event = \mod_exaaifeedback\event\course_module_viewed::create([
+    'objectid' => $instance->id,
+    'context' => $context,
+]);
+$event->add_record_snapshot('exaaifeedback', $instance);
+$event->trigger();
+
 echo $OUTPUT->header();
 
 $render_buttons = function() use ($cm, $instance) {
