@@ -131,6 +131,8 @@ if ($action === 'pdf') {
     exit;
 }
 
+$PAGE->requires->js_call_amd('mod_exaaifeedback/main', 'initFeedbackDetails');
+
 echo $OUTPUT->header();
 
 ob_start();
@@ -205,7 +207,7 @@ $render_buttons = function() use ($cm, $completedid, $result, $result_data, $ins
                 'sesskey' => sesskey(),
             ]);
             ?>
-            <a href="<?php echo $regenerate_url ?>" class="btn btn-secondary" onclick="return confirm('<?php echo get_string('regenerate_feedback_confirm', 'exaaifeedback') ?>');">
+            <a href="<?php echo $regenerate_url ?>" class="btn btn-secondary" data-action="regenerate">
                 <i class="fa fa-refresh"></i>
                 <?php echo get_string('regenerate_feedback', 'exaaifeedback') ?>
             </a>

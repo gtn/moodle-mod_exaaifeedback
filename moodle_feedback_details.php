@@ -79,14 +79,6 @@ $table = new class($instance->feedbackid) extends \local_table_sql\table_sql {
     }
 
     public function wrap_html_start() {
-        ?>
-        <style>
-            .local_table_sql-column-name p {
-                /* needed for label type questions to remove extra spacing */
-                margin-bottom: 0;
-            }
-        </style>
-        <?php
     }
 };
 

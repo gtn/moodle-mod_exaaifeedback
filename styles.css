@@ -29,3 +29,23 @@
     font-size: 120%;
 }
 
+/* feedback_edit.php: full-width editor form */
+.mform.exaaifeedback-edit-form .fcontainer {
+    max-width: 100%;
+}
+.mform.exaaifeedback-edit-form .felement {
+    margin-left: 0;
+}
+.mform.exaaifeedback-edit-form .col-md-3 {
+    display: none;
+}
+.mform.exaaifeedback-edit-form .col-md-9 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+/* moodle_feedback_details.php: remove extra spacing in label cells */
+.path-mod-exaaifeedback .local_table_sql-column-name p {
+    margin-bottom: 0;
+}
+

@@ -45,27 +45,11 @@ class feedback_response_form extends \moodleform {
     }
 
     function display() {
-        echo '<style>
-            .mform.full-width-form .fcontainer { max-width: 100%; }
-            .mform.full-width-form .felement { margin-left: 0; }
-            .mform.full-width-form .col-md-3 { display: none; }
-            .mform.full-width-form .col-md-9 { flex: 0 0 100%; max-width: 100%; }
-        </style>';
-        $this->_form->_attributes['class'] .= ' full-width-form';
+        global $PAGE;
+
+        $this->_form->_attributes['class'] .= ' exaaifeedback-edit-form';
         parent::display();
-        ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                function replaceInputWithButton(id, icon) {
-                    var input = document.getElementById(id);
-                    if (!input) return;
-                    input.outerHTML = input.outerHTML.replace(/^<input/, '<button').replace(/>$/, '>') + '<i class="fa ' + icon + '"></i> ' + input.value + '</button>';
-                }
-                replaceInputWithButton('id_save', 'fa-save');
-                replaceInputWithButton('id_submitfeedback', 'fa-paper-plane');
-            });
-        </script>
-        <?php
+        $PAGE->requires->js_call_amd('mod_exaaifeedback/main', 'initFeedbackEdit');
     }
 }
 
