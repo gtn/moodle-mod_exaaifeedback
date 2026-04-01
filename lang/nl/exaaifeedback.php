@@ -18,6 +18,7 @@ $string['modulename'] = 'Exa AI Feedback';
 $string['modulenameplural'] = 'Exa AI Feedbacks';
 $string['pluginname'] = 'Exa AI Feedback';
 $string['pluginadministration'] = 'Exa AI Feedback administratie';
+$string['privacy:metadata'] = 'De Exa AI Feedback plugin slaat geen persoonlijke gegevens op. Gebruikersgegevens worden beheerd door de gekoppelde feedbackactiviteit.';
 $string['exaaifeedback:addinstance'] = 'Nieuwe Exa AI Feedback toevoegen';
 $string['exaaifeedback:view'] = 'Eigen AI Feedback bekijken';
 $string['exaaifeedback:manage'] = 'AI Feedbacks beheren';
