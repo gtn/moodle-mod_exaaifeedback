@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * @package    mod_exaaifeedback
+ * @copyright  2026 GTN Solutions https://gtn-solutions.com
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 use mod_exaaifeedback\feedback;
 
 require_once(__DIR__ . '/inc.php');
