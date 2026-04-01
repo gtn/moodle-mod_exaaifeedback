@@ -51,7 +51,7 @@ function exaaifeedback_cm_info_dynamic(cm_info $cm) {
 function exaaifeedback_supports(string $feature): ?bool {
     return match ($feature) {
         FEATURE_MOD_INTRO => true,
-        FEATURE_BACKUP_MOODLE2 => false,
+        FEATURE_BACKUP_MOODLE2 => true,
         FEATURE_GRADE_HAS_GRADE => false,
         default => null,
     };

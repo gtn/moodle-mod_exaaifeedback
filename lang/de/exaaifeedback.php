@@ -14,14 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['modulename'] = 'Exa AI Feedback';
-$string['modulenameplural'] = 'Exa AI Feedbacks';
-$string['pluginname'] = 'Exa AI Feedback';
-$string['pluginadministration'] = 'Exa AI Feedback Administration';
-$string['privacy:metadata'] = 'Das Exa AI Feedback Plugin speichert keine personenbezogenen Daten. Benutzerdaten werden von der verknüpften Feedback-Aktivität verwaltet.';
-$string['exaaifeedback:addinstance'] = 'Neues Exa AI Feedback hinzufügen';
-$string['exaaifeedback:view'] = 'Eigenes AI Feedback anzeigen';
-$string['exaaifeedback:manage'] = 'AI Feedbacks verwalten';
+$string['modulename'] = 'Exabis KI Feedback';
+$string['modulenameplural'] = 'Exabis KI Feedbacks';
+$string['pluginname'] = 'Exabis KI Feedback';
+$string['pluginadministration'] = 'Exabis KI Feedback Administration';
+$string['privacy:metadata:exaaifeedback_result'] = 'Speichert KI-generierte Feedback-Ergebnisse, die mit den Feedback-Einreichungen der Benutzer verknüpft sind.';
+$string['privacy:metadata:exaaifeedback_result:completedid'] = 'Die ID der abgeschlossenen Feedback-Einreichung.';
+$string['privacy:metadata:exaaifeedback_result:timefeedbacksent'] = 'Der Zeitpunkt, zu dem das Feedback für den Benutzer freigegeben wurde.';
+$string['privacy:metadata:exaaifeedback_result:timecreated'] = 'Der Zeitpunkt, zu dem das KI-Feedback generiert wurde.';
+$string['privacy:metadata:exaaifeedback_result:timemodified'] = 'Der Zeitpunkt, zu dem das KI-Feedback zuletzt geändert wurde.';
+$string['privacy:metadata:exaaifeedback_result:data'] = 'JSON-Daten mit dem KI-generierten Feedback, den Benutzerantworten und den Bearbeitungen der Lehrkraft.';
+$string['exaaifeedback:addinstance'] = 'Neues Exabis KI Feedback hinzufügen';
+$string['exaaifeedback:view'] = 'Eigenes KI Feedback anzeigen';
+$string['exaaifeedback:manage'] = 'KI Feedbacks verwalten';
 $string['feedback'] = 'Feedback-Aktivität';
 $string['question'] = 'Frage';
 $string['answer'] = 'Antwort';

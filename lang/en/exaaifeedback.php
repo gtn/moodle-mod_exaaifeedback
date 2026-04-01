@@ -14,12 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['modulename'] = 'Exa AI Feedback';
-$string['modulenameplural'] = 'Exa AI Feedbacks';
-$string['pluginname'] = 'Exa AI Feedback';
-$string['pluginadministration'] = 'Exa AI Feedback administration';
-$string['privacy:metadata'] = 'The Exa AI Feedback plugin does not store any personal data. User data is managed by the linked feedback activity.';
-$string['exaaifeedback:addinstance'] = 'Add a new Exa AI Feedback';
+$string['modulename'] = 'Exabis AI Feedback';
+$string['modulenameplural'] = 'Exabis AI Feedbacks';
+$string['pluginname'] = 'Exabis AI Feedback';
+$string['pluginadministration'] = 'Exabis AI Feedback administration';
+$string['privacy:metadata:exaaifeedback_result'] = 'Stores AI-generated feedback results linked to user feedback submissions.';
+$string['privacy:metadata:exaaifeedback_result:completedid'] = 'The ID of the completed feedback submission.';
+$string['privacy:metadata:exaaifeedback_result:timefeedbacksent'] = 'The time the feedback was released to the user.';
+$string['privacy:metadata:exaaifeedback_result:timecreated'] = 'The time the AI feedback was generated.';
+$string['privacy:metadata:exaaifeedback_result:timemodified'] = 'The time the AI feedback was last modified.';
+$string['privacy:metadata:exaaifeedback_result:data'] = 'JSON data containing the AI-generated feedback, user answers, and teacher edits.';
+$string['exaaifeedback:addinstance'] = 'Add a new Exabis AI Feedback';
 $string['exaaifeedback:view'] = 'View own AI Feedback';
 $string['exaaifeedback:manage'] = 'Manage AI Feedbacks';
 $string['feedback'] = 'Feedback activity';

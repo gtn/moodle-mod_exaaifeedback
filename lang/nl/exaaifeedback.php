@@ -14,12 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['modulename'] = 'Exa AI Feedback';
-$string['modulenameplural'] = 'Exa AI Feedbacks';
-$string['pluginname'] = 'Exa AI Feedback';
-$string['pluginadministration'] = 'Exa AI Feedback administratie';
-$string['privacy:metadata'] = 'De Exa AI Feedback plugin slaat geen persoonlijke gegevens op. Gebruikersgegevens worden beheerd door de gekoppelde feedbackactiviteit.';
-$string['exaaifeedback:addinstance'] = 'Nieuwe Exa AI Feedback toevoegen';
+$string['modulename'] = 'Exabis AI Feedback';
+$string['modulenameplural'] = 'Exabis AI Feedbacks';
+$string['pluginname'] = 'Exabis AI Feedback';
+$string['pluginadministration'] = 'Exabis AI Feedback administratie';
+$string['privacy:metadata:exaaifeedback_result'] = 'Slaat AI-gegenereerde feedbackresultaten op die gekoppeld zijn aan feedback-inzendingen van gebruikers.';
+$string['privacy:metadata:exaaifeedback_result:completedid'] = 'Het ID van de voltooide feedback-inzending.';
+$string['privacy:metadata:exaaifeedback_result:timefeedbacksent'] = 'Het tijdstip waarop de feedback is vrijgegeven aan de gebruiker.';
+$string['privacy:metadata:exaaifeedback_result:timecreated'] = 'Het tijdstip waarop de AI-feedback is gegenereerd.';
+$string['privacy:metadata:exaaifeedback_result:timemodified'] = 'Het tijdstip waarop de AI-feedback voor het laatst is gewijzigd.';
+$string['privacy:metadata:exaaifeedback_result:data'] = 'JSON-gegevens met de AI-gegenereerde feedback, gebruikersantwoorden en bewerkingen van de docent.';
+$string['exaaifeedback:addinstance'] = 'Nieuwe Exabis AI Feedback toevoegen';
 $string['exaaifeedback:view'] = 'Eigen AI Feedback bekijken';
 $string['exaaifeedback:manage'] = 'AI Feedbacks beheren';
 $string['feedback'] = 'Feedbackactiviteit';
