@@ -135,95 +135,90 @@ $PAGE->requires->js_call_amd('mod_exaaifeedback/main', 'initFeedbackDetails');
 
 echo $OUTPUT->header();
 
-ob_start();
-?>
-<table class="generaltable" style="margin: 0;">
-    <tr>
-        <th><?php echo get_string('user') ?></th>
-        <td><?php echo htmlspecialchars($username) ?></td>
-    </tr>
-    <tr>
-        <th><?php echo get_string('date') ?></th>
-        <td><?php echo userdate($completed->timemodified) ?></td>
-    </tr>
-    <?php if ($result->timefeedbacksent): ?>
-        <tr>
-            <th><?php echo get_string('submitted', 'exaaifeedback') ?></th>
-            <td><?php echo userdate($result->timefeedbacksent) ?></td>
-        </tr>
-    <?php endif; ?>
-</table>
-<?php
-echo $OUTPUT->box(ob_get_clean());
+echo $OUTPUT->render_from_template('mod_exaaifeedback/feedback_details_info', [
+    'username' => $username,
+    'date' => userdate($completed->timemodified),
+    'timefeedbacksent' => (bool)$result->timefeedbacksent,
+    'submitted_label' => get_string('submitted', 'exaaifeedback'),
+    'submitted_date' => $result->timefeedbacksent ? userdate($result->timefeedbacksent) : '',
+]);
 
-$render_buttons = function() use ($cm, $completedid, $result, $result_data, $instance, $OUTPUT) {
-    // Show notice if prompt or answers changed since last generation (only if not yet submitted).
-    if (!$result->timefeedbacksent && $result_data->needs_regeneration) {
-        echo $OUTPUT->notification(get_string('feedback_can_be_regenerated', 'exaaifeedback'), 'info');
-    }
-    $pdf_url = new moodle_url('/mod/exaaifeedback/feedback_details.php', [
+$buttons = [];
+
+$buttons[] = [
+    'url' => (new moodle_url('/mod/exaaifeedback/feedback_details.php', [
         'id' => $cm->id,
         'completedid' => $completedid,
         'action' => 'pdf',
-    ]);
-    $edit_url = new moodle_url('/mod/exaaifeedback/feedback_edit.php', [
-        'id' => $cm->id,
-        'completedid' => $completedid,
-    ]);
-    $submit_url = new moodle_url('/mod/exaaifeedback/feedback_details.php', [
-        'id' => $cm->id,
-        'completedid' => $completedid,
-        'action' => 'submit',
-        'sesskey' => sesskey(),
-    ]);
-    $withdraw_url = new moodle_url('/mod/exaaifeedback/feedback_details.php', [
-        'id' => $cm->id,
-        'completedid' => $completedid,
-        'action' => 'withdraw',
-        'sesskey' => sesskey(),
-    ]);
+    ]))->out(false),
+    'class' => 'btn-secondary',
+    'icon' => 'fa-file-pdf-o',
+    'label' => get_string('print_feedback', 'exaaifeedback'),
+    'target' => '_blank',
+];
 
-    ?>
-    <div style="display: flex; gap: 8px; margin: 15px 0">
-        <a href="<?php echo $pdf_url ?>" class="btn btn-secondary" target="_blank">
-            <i class="fa fa-file-pdf-o"></i>
-            <?php echo get_string('print_feedback', 'exaaifeedback') ?>
-        </a>
-        <?php if ($result->timefeedbacksent ?? false): ?>
-            <a href="<?php echo $withdraw_url ?>" class="btn btn-warning">
-                <i class="fa fa-undo"></i>
-                <?php echo get_string('withdraw_feedback', 'exaaifeedback') ?>
-            </a>
-        <?php else: ?>
-            <a href="<?php echo $edit_url ?>" class="btn btn-secondary">
-                <i class="fa fa-edit"></i>
-                <?php echo get_string('edit_feedback', 'exaaifeedback') ?>
-            </a>
-            <?php
-            $regenerate_url = new moodle_url('/mod/exaaifeedback/feedback_details.php', [
-                'id' => $cm->id,
-                'completedid' => $completedid,
-                'action' => 'regenerate',
-                'sesskey' => sesskey(),
-            ]);
-            ?>
-            <a href="<?php echo $regenerate_url ?>" class="btn btn-secondary" data-action="regenerate">
-                <i class="fa fa-refresh"></i>
-                <?php echo get_string('regenerate_feedback', 'exaaifeedback') ?>
-            </a>
-            <a href="<?php echo $submit_url ?>" class="btn btn-primary">
-                <i class="fa fa-paper-plane"></i>
-                <?php echo get_string('submit_to_user', 'exaaifeedback') ?>
-            </a>
-        <?php endif; ?>
-    </div>
-    <?php
-};
+if ($result->timefeedbacksent) {
+    $buttons[] = [
+        'url' => (new moodle_url('/mod/exaaifeedback/feedback_details.php', [
+            'id' => $cm->id,
+            'completedid' => $completedid,
+            'action' => 'withdraw',
+            'sesskey' => sesskey(),
+        ]))->out(false),
+        'class' => 'btn-warning',
+        'icon' => 'fa-undo',
+        'label' => get_string('withdraw_feedback', 'exaaifeedback'),
+    ];
+} else {
+    $buttons[] = [
+        'url' => (new moodle_url('/mod/exaaifeedback/feedback_edit.php', [
+            'id' => $cm->id,
+            'completedid' => $completedid,
+        ]))->out(false),
+        'class' => 'btn-secondary',
+        'icon' => 'fa-edit',
+        'label' => get_string('edit_feedback', 'exaaifeedback'),
+    ];
+    $buttons[] = [
+        'url' => (new moodle_url('/mod/exaaifeedback/feedback_details.php', [
+            'id' => $cm->id,
+            'completedid' => $completedid,
+            'action' => 'regenerate',
+            'sesskey' => sesskey(),
+        ]))->out(false),
+        'class' => 'btn-secondary',
+        'icon' => 'fa-refresh',
+        'label' => get_string('regenerate_feedback', 'exaaifeedback'),
+        'data-action' => 'regenerate',
+    ];
+    $buttons[] = [
+        'url' => (new moodle_url('/mod/exaaifeedback/feedback_details.php', [
+            'id' => $cm->id,
+            'completedid' => $completedid,
+            'action' => 'submit',
+            'sesskey' => sesskey(),
+        ]))->out(false),
+        'class' => 'btn-primary',
+        'icon' => 'fa-paper-plane',
+        'label' => get_string('submit_to_user', 'exaaifeedback'),
+    ];
+}
 
-$render_buttons();
+$buttons_data = ['buttons' => $buttons];
+
+if (!$result->timefeedbacksent && $result_data->needs_regeneration) {
+    $buttons_data['regeneration_notice'] = $OUTPUT->notification(
+        get_string('feedback_can_be_regenerated', 'exaaifeedback'),
+        'info',
+    );
+}
+
+$buttons_html = $OUTPUT->render_from_template('mod_exaaifeedback/feedback_details_buttons', $buttons_data);
+
+echo $buttons_html;
 
 output::feedback_details($answers, $result->data->final_response_html, $instance, $cm->id);
 
-$render_buttons();
+echo $buttons_html;
 
 echo $OUTPUT->footer();

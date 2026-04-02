@@ -98,24 +98,24 @@ $event->trigger();
 
 echo $OUTPUT->header();
 
-$render_buttons = function() use ($cm, $instance) {
-    global $PAGE;
-    $pdf_url = $PAGE->url->out(true, ['action' => 'pdf']);
+$buttons = [];
 
-    ?>
-    <div style="margin: 15px 0;">
-        <a href="<?php echo $pdf_url ?>" class="btn btn-primary" target="_blank">
-            <i class="fa fa-file-pdf-o"></i>
-            <?php echo get_string('print_feedback', 'exaaifeedback') ?>
-        </a>
-    </div>
-    <?php
-};
+$buttons[] = [
+    'url' => $PAGE->url->out(false, ['action' => 'pdf']),
+    'class' => 'btn-primary',
+    'icon' => 'fa-file-pdf-o',
+    'label' => get_string('print_feedback', 'exaaifeedback'),
+    'target' => '_blank',
+];
 
-$render_buttons();
+$buttons_html = $OUTPUT->render_from_template('mod_exaaifeedback/feedback_details_buttons', [
+    'buttons' => $buttons,
+]);
+
+echo $buttons_html;
 
 \mod_exaaifeedback\output::feedback_details($answers, $final_response_html, $instance, $cm->id);
 
-$render_buttons();
+echo $buttons_html;
 
 echo $OUTPUT->footer();

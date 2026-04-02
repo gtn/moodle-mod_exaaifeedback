@@ -44,6 +44,37 @@
     max-width: 100%;
 }
 
+/* feedback info table: no bottom margin */
+.path-mod-exaaifeedback .exaaifeedback-info-table {
+    margin: 0;
+}
+
+/* action buttons row */
+.path-mod-exaaifeedback .exaaifeedback-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 1rem 0;
+}
+
+/* intro text block */
+.path-mod-exaaifeedback .exaaifeedback-intro {
+    text-align: justify;
+    margin-top: 2rem;
+}
+
+/* answers table: equal columns */
+.path-mod-exaaifeedback .exaaifeedback-answers-table {
+    table-layout: fixed;
+}
+.path-mod-exaaifeedback .exaaifeedback-answers-table col {
+    width: 50%;
+}
+
+/* answer section label */
+.path-mod-exaaifeedback .exaaifeedback-answer-label {
+    margin-left: 12px;
+}
+
 /* moodle_feedback_details.php: remove extra spacing in label cells */
 .path-mod-exaaifeedback .local_table_sql-column-name p {
     margin-bottom: 0;

@@ -37,62 +37,50 @@ class output {
     static function feedback_details(array $answers, string $response_html, object $instance, int $cmid): void {
         global $OUTPUT;
 
-        if ($instance->intro) {
-            echo '<div style="text-align: justify; margin-top: 2rem;">' . format_module_intro('exaaifeedback', $instance, $cmid, false) . '</div>';
-        }
+        $show_answers = (bool)get_config('mod_exaaifeedback', 'show_answers');
 
-        if (get_config('mod_exaaifeedback', 'show_answers')) {
-            echo $OUTPUT->heading(get_string('feedback_answers', 'exaaifeedback'), 2);
-            echo static::feedback_answers($answers);
-            echo $OUTPUT->heading($instance->name, 2);
-        }
-
-        echo '<div class="ai-response">' . $response_html . '</div>';
+        echo $OUTPUT->render_from_template('mod_exaaifeedback/feedback_content', [
+            'has_intro' => (bool)$instance->intro,
+            'intro_html' => $instance->intro ? format_module_intro('exaaifeedback', $instance, $cmid, false) : '',
+            'answers_html' => $show_answers ? static::feedback_answers($answers) : '',
+            'answers_heading' => get_string('feedback_answers', 'exaaifeedback'),
+            'response_heading' => $instance->name,
+            'response_html' => $response_html,
+        ]);
     }
 
     static function feedback_answers(array $answers, bool $for_pdf = false): string {
-        ob_start();
+        global $OUTPUT;
 
-        $in_table = false;
-        $table_start = '<table class="generaltable" style="table-layout: fixed;">
-            <colgroup><col style="width: 50%"><col style="width: 50%"></colgroup>';
+        $sections = static::group_answers_into_sections($answers);
+        $template = $for_pdf ? 'mod_exaaifeedback/feedback_answers_pdf' : 'mod_exaaifeedback/feedback_answers';
+
+        return $OUTPUT->render_from_template($template, ['sections' => $sections]);
+    }
+
+    private static function group_answers_into_sections(array $answers): array {
+        $sections = [];
+        $current_rows = [];
 
         foreach ($answers as $answer) {
             if (($answer->type ?? '') === 'label') {
-                if ($in_table) {
-                    echo '</table>';
-                    $in_table = false;
+                if ($current_rows) {
+                    $sections[] = ['has_rows' => true, 'rows' => $current_rows];
+                    $current_rows = [];
                 }
-
-                if ($for_pdf) {
-                    ?>
-                    <div style="margin-left: 10px; font-weight: bold;">
-                        <?php echo format_text($answer->text, FORMAT_HTML) ?>
-                    </div>
-                    <?php
-                } else {
-                    ?>
-                    <h3 style="margin-left: 12px"><?php echo format_text($answer->text, FORMAT_HTML) ?></h3>
-                    <?php
-                }
+                $sections[] = ['label' => format_text($answer->text, FORMAT_HTML)];
             } else {
-                if (!$in_table) {
-                    echo $table_start;
-                    $in_table = true;
-                }
-                ?>
-                <tr>
-                    <th><?php echo s($answer->question) ?></th>
-                    <td><?php echo s($answer->answer) ?></td>
-                </tr>
-                <?php
+                $current_rows[] = [
+                    'question' => $answer->question,
+                    'answer' => $answer->answer,
+                ];
             }
         }
 
-        if ($in_table) {
-            echo '</table>';
+        if ($current_rows) {
+            $sections[] = ['has_rows' => true, 'rows' => $current_rows];
         }
 
-        return ob_get_clean();
+        return $sections;
     }
 }
