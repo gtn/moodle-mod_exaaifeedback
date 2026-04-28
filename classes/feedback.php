@@ -213,16 +213,37 @@ class feedback {
                 $cm = get_coursemodule_from_instance('exaaifeedback', $exaaifeedbackid, 0, false, MUST_EXIST);
                 $viewurl = new \moodle_url('/mod/exaaifeedback/view.php', ['id' => $cm->id]);
 
+                $subject = get_string('notification:feedback_released:subject', 'exaaifeedback', $instance->name);
+                $body = get_string('notification:feedback_released:body', 'exaaifeedback', $instance->name);
+
+                if ($instance->notification_custom) {
+                    if (trim($instance->notification_subject ?? '')) {
+                        $subject = $instance->notification_subject;
+                    }
+                    if (trim($instance->notification_body ?? '')) {
+                        $body = $instance->notification_body;
+                    }
+                }
+
+                $placeholders = [
+                    '{feedbackurl}' => $viewurl->out(false),
+                    '{user.firstname}' => $user->firstname,
+                    '{user.lastname}' => $user->lastname,
+                    '{user.fullname}' => fullname($user),
+                ];
+                $subject = str_replace(array_keys($placeholders), array_values($placeholders), $subject);
+                $body = str_replace(array_keys($placeholders), array_values($placeholders), $body);
+
                 $message = new \core\message\message();
                 $message->component = 'mod_exaaifeedback';
                 $message->name = 'feedback_released';
                 $message->userfrom = \core_user::get_noreply_user();
                 $message->userto = $user;
-                $message->subject = get_string('notification:feedback_released:subject', 'exaaifeedback', $instance->name);
-                $message->fullmessage = get_string('notification:feedback_released:body', 'exaaifeedback', $instance->name);
+                $message->subject = $subject;
+                $message->fullmessage = $body;
                 $message->fullmessageformat = FORMAT_PLAIN;
                 $message->fullmessagehtml = '';
-                $message->smallmessage = get_string('notification:feedback_released:subject', 'exaaifeedback', $instance->name);
+                $message->smallmessage = $subject;
                 $message->notification = 1;
                 $message->contexturl = $viewurl->out(false);
                 $message->contexturlname = $instance->name;

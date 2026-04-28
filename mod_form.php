@@ -36,6 +36,8 @@ class mod_exaaifeedback_mod_form extends moodleform_mod {
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
 
+        $this->standard_intro_elements();
+
         $feedbacks = $DB->get_records('feedback', ['course' => $this->get_course()->id], 'name', 'id, name');
         $options = ['' => '=== ' . get_string('choose') . ' ==='];
         foreach ($feedbacks as $feedback) {
@@ -48,7 +50,20 @@ class mod_exaaifeedback_mod_form extends moodleform_mod {
         $mform->setType('prompt', PARAM_RAW);
         $mform->addElement('static', 'prompt_info', '', get_string('prompt:desc', 'exaaifeedback'));
 
-        $this->standard_intro_elements();
+        $mform->addElement('header', 'notification_header', get_string('notification_settings', 'exaaifeedback'));
+        $mform->setExpanded('notification_header');
+
+        $mform->addElement('advcheckbox', 'notification_custom', get_string('notification_custom', 'exaaifeedback'));
+        $mform->addElement('static', 'notification_custom_info', '', get_string('notification_custom:desc', 'exaaifeedback'));
+
+        $mform->addElement('text', 'notification_subject', get_string('notification_subject', 'exaaifeedback'), ['size' => '64']);
+        $mform->setType('notification_subject', PARAM_TEXT);
+        $mform->hideIf('notification_subject', 'notification_custom', 'notchecked');
+
+        $mform->addElement('textarea', 'notification_body', get_string('notification_body', 'exaaifeedback'), ['rows' => 4, 'cols' => 64]);
+        $mform->setType('notification_body', PARAM_TEXT);
+        $mform->hideIf('notification_body', 'notification_custom', 'notchecked');
+
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();
     }

@@ -25,5 +25,28 @@ defined('MOODLE_INTERNAL') || die;
 function xmldb_exaaifeedback_upgrade(int $oldversion): bool {
     global $DB;
 
+    $dbman = $DB->get_manager();
+
+    if ($oldversion < 2026042800) {
+        $table = new xmldb_table('exaaifeedback');
+
+        $field = new xmldb_field('notification_custom', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'prompt');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('notification_subject', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'notification_custom');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('notification_body', XMLDB_TYPE_TEXT, null, null, null, null, null, 'notification_subject');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2026042800, 'exaaifeedback');
+    }
+
     return true;
 }
