@@ -40,7 +40,15 @@ class restore_exaaifeedback_activity_structure_step extends restore_activity_str
 
         $data = (object)$data;
         $data->course = $this->get_courseid();
-        $data->feedbackid = $this->get_mappingid('feedback', $data->feedbackid) ?: 0;
+
+        $mappedfeedbackid = $this->get_mappingid('feedback', $data->feedbackid);
+        if ($mappedfeedbackid) {
+            $data->feedbackid = $mappedfeedbackid;
+        } elseif (!$DB->record_exists('feedback', ['id' => $data->feedbackid, 'course' => $data->course])) {
+            // Duplication within same course keeps the original feedbackid; only reset if it does not belong here.
+            $data->feedbackid = 0;
+        }
+
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
         $newitemid = $DB->insert_record('exaaifeedback', $data);
