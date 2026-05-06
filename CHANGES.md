@@ -1,3 +1,6 @@
+### v5.1 (2026050600) ###
+* fix backup, restore and duplication
+
 ### v5.1 (2026042800) ###
 * activity settings: custom notification message
 

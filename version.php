@@ -22,7 +22,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2026042800;
+$plugin->version = 2026050600;
 $plugin->requires = 2024100701; // moodle 4.5
 $plugin->component = 'mod_exaaifeedback';
 $plugin->release = '5.1';
