@@ -74,3 +74,7 @@ $string['notification_body'] = 'Email message';
 $string['regenerate_feedback'] = 'Regenerate AI feedback';
 $string['regenerate_feedback_confirm'] = 'Are you sure? The current feedback and any edits will be replaced.';
 $string['feedback_can_be_regenerated'] = 'The prompt or answers have changed since the last generation. You can regenerate the AI feedback.';
+$string['error_no_aichat_block'] = 'The AI feedback cannot be generated because the "Exabis AI Chat Block" was not found in this course or has not been configured yet. Please add the block to the course and configure the AI connection in the block settings. Afterwards the AI feedback can be generated.';
+$string['error_no_feedback_activity'] = 'No Feedback activity was found in this course. The AI feedback is based on the questionnaire of a Feedback activity. Please create a Feedback activity first.';
+$string['create_feedback_activity'] = 'Create Feedback activity';
+$string['no_feedback_selected'] = 'No Feedback activity is linked yet. Please select a Feedback activity in the settings of this activity.';

@@ -74,3 +74,7 @@ $string['notification_body'] = 'E-mailbericht';
 $string['regenerate_feedback'] = 'AI-feedback opnieuw genereren';
 $string['regenerate_feedback_confirm'] = 'Weet je het zeker? De huidige feedback en eventuele bewerkingen worden vervangen.';
 $string['feedback_can_be_regenerated'] = 'De prompt of antwoorden zijn gewijzigd sinds de laatste generatie. Je kunt de AI-feedback opnieuw genereren.';
+$string['error_no_aichat_block'] = 'De AI-feedback kan niet worden gegenereerd omdat het "Exabis AI Chat Block" niet in deze cursus is gevonden of nog niet is geconfigureerd. Voeg het blok toe aan de cursus en configureer de AI-verbinding in de blokinstellingen. Daarna kan de AI-feedback worden gegenereerd.';
+$string['error_no_feedback_activity'] = 'Er is geen Feedback-activiteit gevonden in deze cursus. De AI-feedback is gebaseerd op de vragenlijst van een Feedback-activiteit. Maak eerst een Feedback-activiteit aan.';
+$string['create_feedback_activity'] = 'Feedback-activiteit aanmaken';
+$string['no_feedback_selected'] = 'Er is nog geen Feedback-activiteit gekoppeld. Selecteer een Feedback-activiteit in de instellingen van deze activiteit.';

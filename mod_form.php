@@ -26,9 +26,36 @@ require_once($CFG->dirroot . '/course/moodleform_mod.php');
 
 class mod_exaaifeedback_mod_form extends moodleform_mod {
     public function definition() {
-        global $DB;
+        global $DB, $OUTPUT;
 
         $mform = $this->_form;
+
+        $feedbacks = $DB->get_records('feedback', ['course' => $this->get_course()->id], 'name', 'id, name');
+
+        // Without a feedback activity there is nothing to link to — show a hint with a create link instead of the form.
+        if (!$feedbacks) {
+            // Pass the position params through, so the feedback activity gets created in the right place.
+            $create_url = new moodle_url('/course/modedit.php', [
+                'add' => 'feedback',
+                'course' => $this->get_course()->id,
+                'section' => optional_param('section', 0, PARAM_INT),
+                'beforemod' => optional_param('beforemod', 0, PARAM_INT),
+                'sr' => optional_param('sr', -1, PARAM_INT),
+                'return' => 0,
+            ]);
+            $mform->addElement('html', $OUTPUT->notification(
+                get_string('error_no_feedback_activity', 'exaaifeedback'),
+                'warning',
+                false,
+            ));
+            // A nested <form> (e.g. single_button) is not allowed inside the mform, so use a button-styled link.
+            $mform->addElement('html', '<div class="mb-3"><a href="' . $create_url->out() . '" class="btn btn-primary">'
+                . get_string('create_feedback_activity', 'exaaifeedback') . '</a></div>');
+            // definition_after_data() in moodleform_mod needs the hidden elements, and cancel leads back to the course.
+            $this->standard_hidden_coursemodule_elements();
+            $mform->addElement('cancel');
+            return;
+        }
 
         $mform->addElement('header', 'general', get_string('general'));
 
@@ -38,13 +65,11 @@ class mod_exaaifeedback_mod_form extends moodleform_mod {
 
         $this->standard_intro_elements();
 
-        $feedbacks = $DB->get_records('feedback', ['course' => $this->get_course()->id], 'name', 'id, name');
-        $options = ['' => '=== ' . get_string('choose') . ' ==='];
+        $options = [];
         foreach ($feedbacks as $feedback) {
             $options[$feedback->id] = $feedback->name;
         }
         $mform->addElement('select', 'feedbackid', get_string('feedback', 'exaaifeedback'), $options);
-        $mform->addRule('feedbackid', null, 'required', null, 'client');
 
         $mform->addElement('textarea', 'prompt', get_string('prompt', 'exaaifeedback'), ['rows' => 6, 'cols' => 64]);
         $mform->setType('prompt', PARAM_RAW);

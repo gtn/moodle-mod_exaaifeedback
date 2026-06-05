@@ -39,6 +39,14 @@ $PAGE->set_url('/mod/exaaifeedback/feedbacks.php', ['id' => $cm->id]);
 $PAGE->set_title(format_string($instance->name));
 $PAGE->set_heading(format_string($course->fullname));
 
+// Without a linked feedback activity (e.g. saved before one existed, or lost during restore) the list would just be empty — explain instead.
+if (!$instance->feedbackid) {
+    echo $OUTPUT->header();
+    echo $OUTPUT->notification(get_string('no_feedback_selected', 'exaaifeedback'), 'warning', false);
+    echo $OUTPUT->footer();
+    exit;
+}
+
 $table = new class($instance->feedbackid, $cm->id, $instance->id) extends \local_table_sql\table_sql {
     public function __construct(protected int $feedbackid, protected int $cmid, protected int $exaaifeedbackid) {
         parent::__construct([$feedbackid, $exaaifeedbackid]);

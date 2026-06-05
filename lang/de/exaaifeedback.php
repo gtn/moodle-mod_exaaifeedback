@@ -74,3 +74,7 @@ $string['notification_body'] = 'E-Mail-Nachricht';
 $string['regenerate_feedback'] = 'KI-Feedback neu generieren';
 $string['regenerate_feedback_confirm'] = 'Sind Sie sicher? Das aktuelle Feedback und alle Bearbeitungen werden ersetzt.';
 $string['feedback_can_be_regenerated'] = 'Der Prompt oder die Antworten haben sich seit der letzten Generierung geändert. Das KI-Feedback kann neu generiert werden.';
+$string['error_no_aichat_block'] = 'Das KI-Feedback kann nicht generiert werden, da der "Exabis KI Chat Block" in diesem Kurs nicht gefunden wurde oder noch nicht konfiguriert ist. Bitte fügen Sie den Block zum Kurs hinzu und konfigurieren Sie die KI-Anbindung in den Block-Einstellungen. Danach kann das KI-Feedback generiert werden.';
+$string['error_no_feedback_activity'] = 'In diesem Kurs wurde keine Feedback-Aktivität gefunden. Das KI-Feedback basiert auf dem Fragebogen einer Feedback-Aktivität. Bitte legen Sie zuerst eine Feedback-Aktivität an.';
+$string['create_feedback_activity'] = 'Feedback-Aktivität anlegen';
+$string['no_feedback_selected'] = 'Es ist noch keine Feedback-Aktivität verknüpft. Bitte wählen Sie in den Einstellungen dieser Aktivität eine Feedback-Aktivität aus.';

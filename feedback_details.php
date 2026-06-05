@@ -55,6 +55,14 @@ if ($completed->anonymous_response != 1 && $completed->userid) {
     $username = get_string('anonymous', 'feedback');
 }
 
+// Without a configured Exa AI Chat block no AI config exists, so feedback can't be generated — explain instead of failing.
+if (!\block_exaaichat\completion\completion_base::get_course_config($course->id)) {
+    echo $OUTPUT->header();
+    echo $OUTPUT->notification(get_string('error_no_aichat_block', 'exaaifeedback'), 'warning', false);
+    echo $OUTPUT->footer();
+    exit;
+}
+
 // Generate on first access, or get cached result with needs_regeneration flag.
 $error = '';
 try {
