@@ -42,19 +42,16 @@ class feedback {
     }
 
     /**
-     * Get all completed submissions with their values.
-     * Returns an array of objects with: completedid, userid, timemodified, and a 'values' array (itemid => value).
+     * Build a structured representation of a user's questionnaire answers.
+     * Labels keep their headline text; questions include the answer plus options (multichoice) and the points range (numeric).
+     * @return object[]
      */
-    /**
-     * Generate AI feedback for a completed feedback submission.
-     */
-    static function generate_ai_feedback(object $instance, int $courseid, int $completedid, object $completed): object {
+    static function get_answers(int $feedbackid, int $completedid): array {
         global $DB;
 
-        $items = static::get_items($instance->feedbackid);
+        $items = static::get_items($feedbackid);
         $values = $DB->get_records('feedback_value', ['completed' => $completedid], '', 'item, value');
 
-        // Build JSON representation of feedback answers to prevent prompt injection.
         $answers = [];
         foreach ($items as $item) {
             if ($item->typ === 'pagebreak') {
@@ -85,6 +82,22 @@ class feedback {
 
             $answers[] = $entry;
         }
+
+        return $answers;
+    }
+
+    /**
+     * Get all completed submissions with their values.
+     * Returns an array of objects with: completedid, userid, timemodified, and a 'values' array (itemid => value).
+     */
+    /**
+     * Generate AI feedback for a completed feedback submission.
+     */
+    static function generate_ai_feedback(object $instance, int $courseid, int $completedid, object $completed): object {
+        global $DB;
+
+        // Build JSON representation of feedback answers to prevent prompt injection.
+        $answers = static::get_answers($instance->feedbackid, $completedid);
 
         $prompt = $instance->prompt ?: 'Please provide feedback for the following responses:';
 

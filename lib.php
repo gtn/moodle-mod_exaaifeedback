@@ -62,3 +62,11 @@ function exaaifeedback_supports(string $feature): ?bool {
         default => null,
     };
 }
+
+/**
+ * Contribute AI tool classes to the Exa AI Chat block.
+ * @return string[] action class names to offer to the chat AI
+ */
+function exaaifeedback_exaaichat_actions(): array {
+    return [\mod_exaaifeedback\chat_actions::class];
+}
